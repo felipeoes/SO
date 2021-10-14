@@ -5,7 +5,30 @@ public class BCP {
     private Registrador Y;
     private EstadoProcesso estadoProcesso;
     private String[] codigo; // código do programa
+    private int espera;
+    private int contInterrompidos;
 
+    public BCP(){
+        this.CP=new Registrador();
+        this.espera=0;
+        this.contInterrompidos=0;
+    }
+    
+    public void aumentaInterrompidos(){
+        this.contInterrompidos++;
+    }
+    public boolean doisInterrompidos(){
+        if(contInterrompidos>1){
+            return true;
+        }
+        return false;
+    }
+    public void setEspera(int espera){
+        this.espera=espera;
+    }
+    public int getEspera(){
+        return espera;
+    }
     public String getNomeProcesso() {
         return nomeProcesso;
     }
@@ -14,28 +37,30 @@ public class BCP {
         this.nomeProcesso = nomeProcesso;
     }
 
-    public Registrador getCP() {
-        return CP;
+    public int getCP() {
+        return CP.getValor();
     }
 
     public void setCP(Registrador cP) {
         CP = cP;
     }
-
-    public Registrador getX() {
-        return X;
+    public void aumentaCP() {
+        CP.setValor(CP.getValor()+1);;
+    }
+    public int getX() {
+        return X.getValor();
     }
 
     public void setX(Registrador x) {
-        X = x;
+        X=x;
     }
 
-    public Registrador getY() {
-        return Y;
+    public int getY() {
+        return Y.getValor();
     }
 
     public void setY(Registrador y) {
-        Y = y;
+        Y=y;
     }
 
     public EstadoProcesso getEstadoProcesso() {
