@@ -11,6 +11,15 @@ public class TabelaDeProcessos {
         this.processos = processos;
     }
 
+    public void removeProcesso(Processo processo) {
+        this.processos.remove(processo);
+    }
+    public void addProcesso(Processo processo) {
+        this.processos.add(processo);
+    }
+    public TabelaDeProcessos(){
+        processos=new ArrayList<Processo>();
+    }
     // private void buscaProcesso(BCP bcp) {
     //     for(Processo p : processos) {
     //         if(bcp.equals(processos) {
