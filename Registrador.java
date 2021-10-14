@@ -1,6 +1,6 @@
 public class Registrador {
     private boolean emUso;
-
+    private int valor=0;
     public boolean isEmUso() {
         return emUso;
     }
@@ -9,4 +9,11 @@ public class Registrador {
         this.emUso = emUso;
     }
 
+    public int getValor() {
+        return valor;
+    }
+
+    public void setValor(int Valor) {
+        this.valor = Valor;
+    }
 }
