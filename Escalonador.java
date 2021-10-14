@@ -15,13 +15,25 @@ public class Escalonador {
     private static List<Processo> processosProntos;
     private static List<Processo> processosBloq;
     private static Processo processoExec;
-
+    private int interrompido;
     public int getQuantum() {
         return quantum;
     }
 
     public void setQuantum(int quantum) {
         this.quantum = quantum;
+    }
+    public boolean temProcessosProntos(){
+        if(processosProntos.size()>0){
+            return true;
+        }
+        return false;
+    }
+    public boolean temProcessosBloq(){
+        if(processosBloq.size()>0){
+            return true;
+        }
+        return false;
     }
 
     public Escalonador() {
@@ -57,14 +69,15 @@ public class Escalonador {
                         String q = new String(Files.readAllBytes(Paths.get(caminhoBase + arq.getName())));
                         quantum = Integer.parseInt(q.strip());
                     }
+                    else{
+                        Processo p = new Processo();
+                        p.setBcp(bcp);
+                        processosProntos.add(p);
+                        tabProcessos.addProcesso(p);
+                    }
                 }
-
-                Processo p = new Processo();
-                p.setBcp(bcp);
-                processosProntos.add(p);
             }
         }
-
         return quantum;
     }
 
@@ -75,7 +88,54 @@ public class Escalonador {
         int quantum = carregaProcessosRAM();
         esc.setQuantum(quantum);
         
+        while(esc.temProcessosBloq() || esc.temProcessosProntos()){
+            if(esc.temProcessosProntos()){
+                boolean parouAntes=false;
+                int contQuantum=0;
+                processoExec = processosProntos.remove(0);
+                BCP processoExecBCP=processoExec.getBcp();
+                processoExecBCP.setEstadoProcesso(BCP.EstadoProcesso.Executando);
+                aumentaInterrompidos();
+                while(contQuantum<quantum){
+                    String instrucaoAtual=processoExecBCP.getCodigo()[processoExec.getBcp().getCP()];
 
+                    if(instrucaoAtual.contains("X=")){
+                        Registrador valor = new Registrador();
+                        valor.setValor(Integer.parseInt(instrucaoAtual.substring(2, 3)));
+                        processoExecBCP.setX(valor);
+                    }
+                    else if(instrucaoAtual.contains("Y=")){
+                        Registrador valor = new Registrador();
+                        valor.setValor(Integer.parseInt(instrucaoAtual.substring(2, 3)));
+                        processoExecBCP.setY(valor);
+                    }
+                    else if (instrucaoAtual.contains("E/S")){
+                        processoExecBCP.setEstadoProcesso(BCP.EstadoProcesso.Bloqueado);
+                        processosBloq.add(processoExec);
+                        processoExecBCP.setEspera(3);
+                        parouAntes=true;
+                    }
+                    else if (instrucaoAtual.contains("COM")){
+                      
+                    }
+                    else if (instrucaoAtual.contains("SAIDA")){
+                        processosProntos.remove(processoExec);
+                        tabProcessos.removeProcesso(processoExec);
+                        parouAntes=true;
+                        break;
+                    }
+                    processoExecBCP.aumentaCP();
+                    contQuantum++;
+                }
+                if(parouAntes == false){
+                    processoExecBCP.setEstadoProcesso(BCP.EstadoProcesso.Pronto);
+                    processosProntos.add(processoExec);
+                }
+                diminuiEspera();
+            }else{
+                diminuiEspera();
+            }
+        }
         // Escalonador esc = new Escalonador(3);
         // Processo p1 = new Processo();
         // Processo p2 = new Processo();
@@ -91,6 +151,38 @@ public class Escalonador {
 
         // esc.tabProcessos.setProcessos(processos);
         // esc.tabProcessos.exibeProcessos();
+    }
+    static public void aumentaInterrompidos(){
+        for(Processo bloq: processosBloq){
+            bloq.getBcp().aumentaInterrompidos();
+        }
+        verificaInterrompidos();
+    }
+    static public void verificaInterrompidos(){
+        for (int i=0;i<processosBloq.size();i++){
+            Processo bloq=processosBloq.get(i);
+            if(bloq.getBcp().doisInterrompidos()){
+                processosBloq.remove(bloq);
+                bloq.getBcp().setEstadoProcesso(BCP.EstadoProcesso.Pronto);
+                processosProntos.add(bloq);
+            }
+        }
+    }
+    static public void diminuiEspera( ){
+        for(Processo bloq: processosBloq){
+            if(bloq.getBcp().getEspera() > 0){
+                bloq.getBcp().setEspera(bloq.getBcp().getEspera()-1);
+            }
+        }
+        verificaEsperaZerada();
+    }
+    static public void verificaEsperaZerada(){
+        for (int i=0;i<processosBloq.size();i++){
+            Processo bloq=processosBloq.get(i);
+            processosBloq.remove(bloq);
+            bloq.getBcp().setEstadoProcesso(BCP.EstadoProcesso.Pronto);
+            processosProntos.add(bloq);
+        }
     }
 
 }
