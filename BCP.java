@@ -1,4 +1,7 @@
+package javaapplication3;
+
 public class BCP {
+
     private String nomeProcesso;
     private Registrador CP; // contador de programa
     private Registrador X;
@@ -6,29 +9,20 @@ public class BCP {
     private EstadoProcesso estadoProcesso;
     private String[] codigo; // código do programa
     private int espera;
-    private int contInterrompidos;
 
-    public BCP(){
-        this.CP=new Registrador();
-        this.espera=0;
-        this.contInterrompidos=0;
+    public BCP() {
+        this.CP = new Registrador();
+        this.espera = 0;
     }
-    
-    public void aumentaInterrompidos(){
-        this.contInterrompidos++;
+
+    public void setEspera(int espera) {
+        this.espera = espera;
     }
-    public boolean doisInterrompidos(){
-        if(contInterrompidos>1){
-            return true;
-        }
-        return false;
-    }
-    public void setEspera(int espera){
-        this.espera=espera;
-    }
-    public int getEspera(){
+
+    public int getEspera() {
         return espera;
     }
+
     public String getNomeProcesso() {
         return nomeProcesso;
     }
@@ -44,15 +38,17 @@ public class BCP {
     public void setCP(Registrador cP) {
         CP = cP;
     }
+
     public void aumentaCP() {
-        CP.setValor(CP.getValor()+1);;
+        CP.setValor(CP.getValor() + 1);
     }
+
     public int getX() {
         return X.getValor();
     }
 
     public void setX(Registrador x) {
-        X=x;
+        X = x;
     }
 
     public int getY() {
@@ -60,7 +56,7 @@ public class BCP {
     }
 
     public void setY(Registrador y) {
-        Y=y;
+        Y = y;
     }
 
     public EstadoProcesso getEstadoProcesso() {

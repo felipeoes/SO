@@ -1,6 +1,9 @@
+package javaapplication3;
+
 public class Registrador {
     private boolean emUso;
     private int valor=0;
+    
     public boolean isEmUso() {
         return emUso;
     }
