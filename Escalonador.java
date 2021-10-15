@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -135,14 +134,18 @@ public class Escalonador {
 
                     String instrucaoAtual = processoExecBCP.getCodigo()[processoExec.getBcp().getCP()];
 
-                    if (instrucaoAtual.contains("X=")) {
+                    if (instrucaoAtual.contains("X=") || instrucaoAtual.contains("Y=")) {
                         Registrador valor = new Registrador();
-                        valor.setValor(Integer.parseInt(instrucaoAtual.substring(2, 3)));
-                        processoExecBCP.setX(valor);
-                    } else if (instrucaoAtual.contains("Y=")) {
-                        Registrador valor = new Registrador();
-                        valor.setValor(Integer.parseInt(instrucaoAtual.substring(2, 3)));
-                        processoExecBCP.setY(valor);
+
+                        String[] atribuicao = instrucaoAtual.split("=");
+                        valor.setValor(Integer.parseInt(atribuicao[1]));
+
+                        if (atribuicao[0].equals("X")) {
+                            processoExecBCP.setX(valor);
+                        } else {
+                            processoExecBCP.setY(valor);
+                        }
+
                     } else if (instrucaoAtual.contains("E/S")) {
 
                         // printando processo que executa E/S
@@ -170,6 +173,7 @@ public class Escalonador {
                         this.logPrinter.printFinalizou(nomeProcesso, processoExecBCP.getX(), processoExecBCP.getY());
                         break;
                     }
+
                     processoExecBCP.aumentaCP();
                     contQuantum++;
 
