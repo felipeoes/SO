@@ -1,5 +1,3 @@
-package javaapplication3;
-
 public class Report {
 
     private int qntTrocaProcesso;

@@ -1,5 +1,3 @@
-package javaapplication3;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -11,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Escalonador {
-
     private final static int TAM_MAX_PROGRAMA = 21;
     private int quantum;
 
@@ -20,42 +17,35 @@ public class Escalonador {
     private static List<Processo> processosBloq;
     private static Processo processoExec;
 
-    private final LogPrinter logPrinter;
+    private final LogWriter logWriter;
 
     public int getQuantum() {
         return quantum;
     }
 
     public boolean temProcessosProntos() {
-        if (processosProntos.size() > 0) {
-            return true;
-        }
-        return false;
+        return processosProntos.size() > 0;
     }
 
     public boolean temProcessosBloq() {
-        if (processosBloq.size() > 0) {
-            return true;
-        }
-        return false;
+        return processosBloq.size() > 0;
     }
 
     public Escalonador() {
         tabProcessos = new TabelaDeProcessos();
         processosProntos = new ArrayList<Processo>();
         processosBloq = new ArrayList<Processo>();
-        logPrinter = new LogPrinter();
+        logWriter = new LogWriter();
     }
 
     private int carregaProcessosRAM() throws IOException {
-        String caminhoBase = "C:\\Users\\gabriel\\Desktop\\projeto_SO\\JavaApplication3\\src\\programas\\";
+        String caminhoBase = "./programas";
         File dir = new File(caminhoBase); // diretorio alvo
         File[] arquivos = dir.listFiles();
-        int quantumLido = -1;
+        File arqQuantum = new File("./programas/quantum.txt");
+        int quantumLido = Integer.parseInt(new String(Files.readAllBytes(Paths.get(arqQuantum.toURI()))).trim());
 
-        // criando arquivo para teste
-        logPrinter.createFile();
-
+        logWriter.criaArquivo(quantumLido);
         for (File arq : arquivos) {
             if (arq.isFile()) {
                 BCP bcp = new BCP();
@@ -74,13 +64,10 @@ public class Escalonador {
                     }
                     bcp.setCodigo(codigo);
 
-                    if (arq.getName().equals("quantum.txt")) {
-                        String q = new String(Files.readAllBytes(Paths.get(caminhoBase + arq.getName())));
-                        quantumLido = Integer.parseInt(q.trim());
-                    } else {
+                    if (!arq.getName().equals("quantum.txt")) {
 
-                        //printando nome do processo
-                        logPrinter.printCarregando(nome);
+                        // escrevendo nome do processo
+                        logWriter.escreveCarregando(nome);
 
                         Processo p = new Processo();
 
@@ -92,6 +79,8 @@ public class Escalonador {
                         tabProcessos.addProcesso(p);
 
                     }
+                } catch (Exception e) {
+                    System.out.println("Erro na leitura dos arquivos");
                 }
             }
         }
@@ -111,7 +100,8 @@ public class Escalonador {
 
                 processoExec = processosProntos.remove(0);
 
-                // contador para quantidades de instruções executadas antes de sofrer a interrupção seja por quantum ou por E/S
+                // contador para quantidades de instruções executadas antes de sofrer a
+                // interrupção seja por quantum ou por E/S
                 int instrucoesExecutadasNoQuantum = 0;
 
                 boolean parouAntes = false;
@@ -122,12 +112,12 @@ public class Escalonador {
                 processoExecBCP.setEstadoProcesso(BCP.EstadoProcesso.Executando);
                 String nomeProcesso = processoExecBCP.getNomeProcesso();
 
-                // printando o nome do processo em execução no arquivo
-                this.logPrinter.printExecutando(nomeProcesso);
+                // escrevendo o nome do processo em execução no arquivo
+                logWriter.escreveExecutando(nomeProcesso);
 
                 while (contQuantum < quantumLido) {
 
-                    //incrementando a quantidade de intruções executadas para report
+                    // incrementando a quantidade de intruções executadas para report
                     report.instrucaoExecutada();
 
                     instrucoesExecutadasNoQuantum++;
@@ -148,8 +138,8 @@ public class Escalonador {
 
                     } else if (instrucaoAtual.contains("E/S")) {
 
-                        // printando processo que executa E/S
-                        this.logPrinter.printES(nomeProcesso);
+                        // escrevendo processo que executa E/S
+                        logWriter.escreveES(nomeProcesso);
 
                         processoExecBCP.setEstadoProcesso(BCP.EstadoProcesso.Bloqueado);
                         processosBloq.add(processoExec);
@@ -157,8 +147,8 @@ public class Escalonador {
                         processoExecBCP.setEspera(3);
                         parouAntes = true;
 
-                        // printando qnt de instruções executadas antes da interrupção de E/S
-                        this.logPrinter.printInterrupcao(nomeProcesso, instrucoesExecutadasNoQuantum);
+                        // escrevendo qnt de instruções executadas antes da interrupção de E/S
+                        this.logWriter.escreveInterrupcao(nomeProcesso, instrucoesExecutadasNoQuantum);
 
                         processoExecBCP.aumentaCP();
                         break;
@@ -170,7 +160,7 @@ public class Escalonador {
                         tabProcessos.removeProcesso(processoExec);
                         parouAntes = true;
 
-                        this.logPrinter.printFinalizou(nomeProcesso, processoExecBCP.getX(), processoExecBCP.getY());
+                        this.logWriter.escreveFinalizou(nomeProcesso, processoExecBCP.getX(), processoExecBCP.getY());
                         break;
                     }
 
@@ -182,7 +172,7 @@ public class Escalonador {
                 if (parouAntes == false) {
                     processoExecBCP.setEstadoProcesso(BCP.EstadoProcesso.Pronto);
                     processosProntos.add(processoExec);
-                    this.logPrinter.printInterrupcao(nomeProcesso, instrucoesExecutadasNoQuantum);
+                    this.logWriter.escreveInterrupcao(nomeProcesso, instrucoesExecutadasNoQuantum);
                 }
 
                 // incrementando o contador de troca de processos
@@ -194,13 +184,10 @@ public class Escalonador {
 
         } // fim processos para executar
 
-        // printando o relatório de médias e o quantum utilizado
-        this.logPrinter.printMediaTrocas(report.mediaTrocaDeProcessos());
-        this.logPrinter.printMediaIntrucoesPorQuantum(report.mediaIntrucoesPorQuantum());
-        this.logPrinter.printQuantum(this.quantum);
-
-        this.logPrinter.close();
-
+        // escrevendo o relatório de médias e o quantum utilizado
+        this.logWriter.escreveMediaTrocas(report.mediaTrocaDeProcessos());
+        this.logWriter.escreveMediaIntrucoesPorQuantum(report.mediaIntrucoesPorQuantum());
+        this.logWriter.escreveQuantum(this.quantum);
     }
 
     private void trataProcessosBloqueados() {
