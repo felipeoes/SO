@@ -67,7 +67,7 @@ public class Escalonador {
                     if (!arq.getName().equals("quantum.txt")) {
 
                         // escrevendo nome do processo
-                        logWriter.escreveCarregando(nome);
+                        logWriter.escreveCarregando(nome, arq);
 
                         Processo p = new Processo();
 
@@ -79,7 +79,8 @@ public class Escalonador {
                         tabProcessos.addProcesso(p);
 
                     }
-                } catch (Exception e) {
+                } 
+                catch (Exception e) {
                     System.out.println("Erro na leitura dos arquivos");
                 }
             }
@@ -203,11 +204,14 @@ public class Escalonador {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) 
+    {
         Escalonador esc = new Escalonador();
-        try {
+        try 
+        {
             esc.execute();
-        } catch (IOException ex) {
+        } 
+        catch (IOException ex) {
             System.out.println("erro de IO");
         }
     }

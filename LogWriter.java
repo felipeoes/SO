@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 
 public class LogWriter {
     File arq;
+    BCP bcp = new BCP();
 
     public LogWriter() {
     }
@@ -17,15 +18,23 @@ public class LogWriter {
             if (tam < 2)
                 quantumStr = "0" + quantumStr;
 
-            File arq = new File(String.format("../Escalonador/logs/log%s.txt", quantumStr));
-
-            if (arq.createNewFile()) {
+            File arq = new File(String.format("./logs/log%s.txt", quantumStr));
+             
+            if (arq.createNewFile()) 
+            {
                 this.arq = arq;
-            } else {
-                System.out.println("Arquivo já existente.");
+            } 
+            else 
+            {
+                System.out.println("Arquivo já existente, gerando um novo...");
+                arq.delete();
+                this.arq = new File(String.format("./logs/log%s.txt", quantumStr));
             }
 
-        } catch (IOException e) {
+            bcp.setNomeArquivoLog(this.arq.getPath());
+        } 
+        catch (IOException e) 
+        {
             System.out.println("erro de E/S.");
         }
     }
@@ -35,8 +44,9 @@ public class LogWriter {
         fw.close();
     }
 
+
     private void escreveString(String str) throws IOException {
-        FileWriter fw = new FileWriter(arq, true);
+        FileWriter fw = new FileWriter(bcp.getNomeArquivoLog(), true);
         BufferedWriter bw = new BufferedWriter(fw);
 
         bw.write(str);
@@ -44,7 +54,7 @@ public class LogWriter {
         fechaWriter(fw, bw);
     }
 
-    void escreveCarregando(String nomeProcesso) throws IOException {
+    void escreveCarregando(String nomeProcesso, File arquivoLeitura) throws IOException {
         String str = "Carregando " + nomeProcesso;
 
         escreveString(str);

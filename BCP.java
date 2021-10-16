@@ -7,6 +7,7 @@ public class BCP {
     private EstadoProcesso estadoProcesso;
     private String[] codigo; // código do programa
     private int espera;
+    private String nomeArquivoLog;
 
     public BCP() {
         this.CP = new Registrador();
@@ -71,6 +72,16 @@ public class BCP {
 
     public void setCodigo(String[] codigo) {
         this.codigo = codigo;
+    }
+
+    public String getNomeArquivoLog() 
+    {
+        return nomeArquivoLog;
+    }
+
+    public void setNomeArquivoLog(String nomeArquivoLog) 
+    {
+        this.nomeArquivoLog = nomeArquivoLog;
     }
 
     public enum EstadoProcesso {
