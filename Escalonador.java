@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Escalonador {
+    private final static int NULL = -1;
     private final static int TAM_MAX_PROGRAMA = 21;
     private int quantum;
 
@@ -38,12 +39,18 @@ public class Escalonador {
         logWriter = new LogWriter();
     }
 
+    private boolean isQuantumValido(int quantumLido) {
+        return quantumLido > 0;
+    }
+
     private int carregaProcessosRAM() throws IOException {
         String caminhoBase = "./programas";
         File dir = new File(caminhoBase); // diretorio alvo
         File[] arquivos = dir.listFiles();
         File arqQuantum = new File("./programas/quantum.txt");
         int quantumLido = Integer.parseInt(new String(Files.readAllBytes(Paths.get(arqQuantum.toURI()))).trim());
+
+        if(!isQuantumValido(quantumLido)) return NULL;
 
         logWriter.criaArquivo(quantumLido);
         for (File arq : arquivos) {
@@ -65,9 +72,8 @@ public class Escalonador {
                     bcp.setCodigo(codigo);
 
                     if (!arq.getName().equals("quantum.txt")) {
-
                         // escrevendo nome do processo
-                        logWriter.escreveCarregando(nome, arq);
+                        logWriter.escreveCarregando(nome);
 
                         Processo p = new Processo();
 
@@ -90,8 +96,12 @@ public class Escalonador {
     }
 
     public void execute() throws IOException {
-
         int quantumLido = carregaProcessosRAM();
+
+        if(quantumLido == NULL) {
+            System.out.println("Quantum inválido");
+            return;
+        }
         this.quantum = quantumLido;
 
         Report report = new Report(processosProntos.size());
@@ -149,7 +159,7 @@ public class Escalonador {
                         parouAntes = true;
 
                         // escrevendo qnt de instruções executadas antes da interrupção de E/S
-                        this.logWriter.escreveInterrupcao(nomeProcesso, instrucoesExecutadasNoQuantum);
+                        logWriter.escreveInterrupcao(nomeProcesso, instrucoesExecutadasNoQuantum);
 
                         processoExecBCP.aumentaCP();
                         break;
@@ -173,7 +183,7 @@ public class Escalonador {
                 if (parouAntes == false) {
                     processoExecBCP.setEstadoProcesso(BCP.EstadoProcesso.Pronto);
                     processosProntos.add(processoExec);
-                    this.logWriter.escreveInterrupcao(nomeProcesso, instrucoesExecutadasNoQuantum);
+                    logWriter.escreveInterrupcao(nomeProcesso, instrucoesExecutadasNoQuantum);
                 }
 
                 // incrementando o contador de troca de processos
@@ -186,9 +196,9 @@ public class Escalonador {
         } // fim processos para executar
 
         // escrevendo o relatório de médias e o quantum utilizado
-        this.logWriter.escreveMediaTrocas(report.mediaTrocaDeProcessos());
-        this.logWriter.escreveMediaIntrucoesPorQuantum(report.mediaIntrucoesPorQuantum());
-        this.logWriter.escreveQuantum(this.quantum);
+        logWriter.escreveMediaTrocas(report.mediaTrocaDeProcessos());
+        logWriter.escreveMediaIntrucoesPorQuantum(report.mediaIntrucoesPorQuantum());
+        logWriter.escreveQuantum(this.quantum);
     }
 
     private void trataProcessosBloqueados() {
@@ -212,7 +222,7 @@ public class Escalonador {
             esc.execute();
         } 
         catch (IOException ex) {
-            System.out.println("erro de IO");
+            System.out.println("erro de IO durante execução do escalonador");
         }
     }
 

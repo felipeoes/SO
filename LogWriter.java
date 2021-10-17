@@ -2,10 +2,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
+import java.io.RandomAccessFile;
 
 public class LogWriter {
     File arq;
-    BCP bcp = new BCP();
 
     public LogWriter() {
     }
@@ -19,22 +19,17 @@ public class LogWriter {
                 quantumStr = "0" + quantumStr;
 
             File arq = new File(String.format("./logs/log%s.txt", quantumStr));
-             
-            if (arq.createNewFile()) 
-            {
-                this.arq = arq;
-            } 
-            else 
-            {
-                System.out.println("Arquivo já existente, gerando um novo...");
-                arq.delete();
-                this.arq = new File(String.format("./logs/log%s.txt", quantumStr));
+
+            if (!arq.createNewFile()) {
+                System.out.println("Arquivo já existente, apagando conteúdo para regravar log...");
+
+                RandomAccessFile rArq = new RandomAccessFile(arq, "rw");
+                rArq.setLength(0);
+                rArq.close();
             }
 
-            bcp.setNomeArquivoLog(this.arq.getPath());
-        } 
-        catch (IOException e) 
-        {
+            this.arq = arq;
+        } catch (IOException e) {
             System.out.println("erro de E/S.");
         }
     }
@@ -44,9 +39,8 @@ public class LogWriter {
         fw.close();
     }
 
-
     private void escreveString(String str) throws IOException {
-        FileWriter fw = new FileWriter(bcp.getNomeArquivoLog(), true);
+        FileWriter fw = new FileWriter(arq, true);
         BufferedWriter bw = new BufferedWriter(fw);
 
         bw.write(str);
@@ -54,7 +48,7 @@ public class LogWriter {
         fechaWriter(fw, bw);
     }
 
-    void escreveCarregando(String nomeProcesso, File arquivoLeitura) throws IOException {
+    void escreveCarregando(String nomeProcesso) throws IOException {
         String str = "Carregando " + nomeProcesso;
 
         escreveString(str);

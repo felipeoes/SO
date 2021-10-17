@@ -25,5 +25,4 @@ public class Report {
     public float mediaTrocaDeProcessos() {
         return qntTrocaProcesso / qntProcessos;
     }
-
 }
