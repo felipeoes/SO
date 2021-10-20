@@ -5,7 +5,7 @@ import java.io.BufferedWriter;
 import java.io.RandomAccessFile;
 
 public class LogWriter {
-    File arq;
+    private File arq;
 
     public LogWriter() {
     }
@@ -48,51 +48,51 @@ public class LogWriter {
         fechaWriter(fw, bw);
     }
 
-    void escreveCarregando(String nomeProcesso) throws IOException {
+    public void escreveCarregando(String nomeProcesso) throws IOException {
         String str = "Carregando " + nomeProcesso;
 
         escreveString(str);
     }
 
-    void escreveES(String nomeProcesso) throws IOException {
+    public void escreveES(String nomeProcesso) throws IOException {
         String str = "E/S iniciada em " + nomeProcesso;
 
         escreveString(str);
     }
 
-    void escreveInterrupcao(String nomeProcesso, int instrucoesExecutadas) throws IOException {
+    public void escreveInterrupcao(String nomeProcesso, int instrucoesExecutadas) throws IOException {
         String str = "Interrompendo " + nomeProcesso + " após " + String.format("%d", instrucoesExecutadas)
                 + " instruções";
 
         escreveString(str);
     }
 
-    void escreveFinalizou(String nomeProcesso, int regX, int regY) throws IOException {
+    public void escreveFinalizou(String nomeProcesso, int regX, int regY) throws IOException {
         String str = nomeProcesso + " terminado. " + "X=" + String.format("%d", regX) + ". Y="
                 + String.format("%d", regY);
 
         escreveString(str);
     }
 
-    void escreveExecutando(String nomeProcesso) throws IOException {
+    public void escreveExecutando(String nomeProcesso) throws IOException {
         String str = "Executando " + nomeProcesso;
 
         escreveString(str);
     }
 
-    void escreveMediaTrocas(float mediaTrocas) throws IOException {
+    public void escreveMediaTrocas(float mediaTrocas) throws IOException {
         String str = "MÉDIA DE TROCAS: " + String.format("%.1f", mediaTrocas);
 
         escreveString(str);
     }
 
-    void escreveMediaIntrucoesPorQuantum(float mediaIntrucoesPorQuantum) throws IOException {
+    public void escreveMediaIntrucoesPorQuantum(float mediaIntrucoesPorQuantum) throws IOException {
         String str = "MÉDIA DE INTRUÇÕES: " + String.format("%.1f", mediaIntrucoesPorQuantum);
 
         escreveString(str);
     }
 
-    void escreveQuantum(int quantum) throws IOException {
+    public void escreveQuantum(int quantum) throws IOException {
         String str = "QUANTUM: " + quantum;
 
         escreveString(str);

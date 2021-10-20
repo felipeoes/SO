@@ -1,3 +1,4 @@
+
 public class Report {
 
     private int qntTrocaProcesso;
@@ -19,10 +20,23 @@ public class Report {
     }
 
     public float mediaIntrucoesPorQuantum() {
-        return qntIntrucoesPorQuantum / qntProcessos;
+        return (float) qntIntrucoesPorQuantum / (float) qntTrocaProcesso;
     }
 
     public float mediaTrocaDeProcessos() {
-        return qntTrocaProcesso / qntProcessos;
+        return (float) qntTrocaProcesso / (float) qntProcessos;
     }
+
+    public int getQntTrocaProcesso() {
+        return qntTrocaProcesso;
+    }
+
+    public int getQntIntrucoesPorQuantum() {
+        return qntIntrucoesPorQuantum;
+    }
+
+    public int getQntProcessos() {
+        return qntProcessos;
+    }
+
 }

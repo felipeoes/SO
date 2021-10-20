@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -9,14 +10,15 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Escalonador {
-    private final static int NULL = -1;
-    private final static int TAM_MAX_PROGRAMA = 21;
+
+    private final int NULL = -1;
+    private final int TAM_MAX_PROGRAMA = 21;
     private int quantum;
 
-    private static TabelaDeProcessos tabProcessos;
-    private static List<Processo> processosProntos;
-    private static List<Processo> processosBloq;
-    private static Processo processoExec;
+    private final TabelaDeProcessos tabProcessos;
+    private final List<Processo> processosProntos;
+    private final List<Processo> processosBloq;
+    private Processo processoExec;
 
     private final LogWriter logWriter;
 
@@ -50,7 +52,9 @@ public class Escalonador {
         File arqQuantum = new File("./programas/quantum.txt");
         int quantumLido = Integer.parseInt(new String(Files.readAllBytes(Paths.get(arqQuantum.toURI()))).trim());
 
-        if(!isQuantumValido(quantumLido)) return NULL;
+        if (!isQuantumValido(quantumLido)) {
+            return NULL;
+        }
 
         logWriter.criaArquivo(quantumLido);
         for (File arq : arquivos) {
@@ -85,8 +89,7 @@ public class Escalonador {
                         tabProcessos.addProcesso(p);
 
                     }
-                } 
-                catch (Exception e) {
+                } catch (Exception e) {
                     System.out.println("Erro na leitura dos arquivos");
                 }
             }
@@ -98,7 +101,7 @@ public class Escalonador {
     public void execute() throws IOException {
         int quantumLido = carregaProcessosRAM();
 
-        if(quantumLido == NULL) {
+        if (quantumLido == NULL) {
             System.out.println("Quantum inválido");
             return;
         }
@@ -214,14 +217,11 @@ public class Escalonador {
         }
     }
 
-    public static void main(String[] args) 
-    {
+    public static void main(String[] args) {
         Escalonador esc = new Escalonador();
-        try 
-        {
+        try {
             esc.execute();
-        } 
-        catch (IOException ex) {
+        } catch (IOException ex) {
             System.out.println("erro de IO durante execução do escalonador");
         }
     }
