@@ -139,15 +139,13 @@ public class Escalonador {
                     String instrucaoAtual = processoExecBCP.getCodigo()[processoExec.getBcp().getCP()];
 
                     if (instrucaoAtual.contains("X=") || instrucaoAtual.contains("Y=")) {
-                        Registrador valor = new Registrador();
-
+                        
                         String[] atribuicao = instrucaoAtual.split("=");
-                        valor.setValor(Integer.parseInt(atribuicao[1]));
-
+ 
                         if (atribuicao[0].equals("X")) {
-                            processoExecBCP.setX(valor);
+                            processoExecBCP.setX(Integer.parseInt(atribuicao[1]));
                         } else {
-                            processoExecBCP.setY(valor);
+                            processoExecBCP.setY(Integer.parseInt(atribuicao[1]));
                         }
 
                     } else if (instrucaoAtual.contains("E/S")) {
