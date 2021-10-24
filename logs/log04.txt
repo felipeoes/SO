@@ -135,6 +135,6 @@ Executando TESTE-2
 TESTE-2 terminado. X=9. Y=1
 Executando TESTE-5
 TESTE-5 terminado. X=8. Y=5
-MÉDIA DE TROCAS: 5,0
-MÉDIA DE INTRUÇÕES: 13,0
+MÉDIA DE TROCAS: 5,2
+MÉDIA DE INTRUÇÕES: 2,7
 QUANTUM: 4

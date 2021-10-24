@@ -97,6 +97,6 @@ Executando TESTE-4
 TESTE-4 terminado. X=91. Y=5
 Executando TESTE-5
 TESTE-5 terminado. X=8. Y=5
-MÉDIA DE TROCAS: 3,0
-MÉDIA DE INTRUÇÕES: 13,0
-QUANTUM: 75
+MÉDIA DE TROCAS: 3,3
+MÉDIA DE INTRUÇÕES: 4,2
+QUANTUM: 21

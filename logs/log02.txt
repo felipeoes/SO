@@ -189,6 +189,6 @@ Executando TESTE-2
 Interrompendo TESTE-2 após 2 instruções
 Executando TESTE-2
 TESTE-2 terminado. X=9. Y=1
-MÉDIA DE TROCAS: 7,0
-MÉDIA DE INTRUÇÕES: 13,0
+MÉDIA DE TROCAS: 7,9
+MÉDIA DE INTRUÇÕES: 1,8
 QUANTUM: 2
