@@ -81,8 +81,8 @@ public class Escalonador {
 
                         Processo p = new Processo();
 
-                        bcp.setX(new Registrador());
-                        bcp.setY(new Registrador());
+                        bcp.setX(0);
+                        bcp.setY(0);
 
                         p.setBcp(bcp);
                         processosProntos.add(p);
