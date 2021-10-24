@@ -1,9 +1,9 @@
 public class BCP {
 
     private String nomeProcesso;
-    private Registrador CP; // contador de programa
-    private Registrador X;
-    private Registrador Y;
+    private int CP; // contador de programa
+    private int X;
+    private int Y;
     private EstadoProcesso estadoProcesso;
     private String[] codigo; // código do programa
     private int espera;
@@ -29,32 +29,30 @@ public class BCP {
         this.nomeProcesso = nomeProcesso;
     }
 
-    public int getCP() {
-        return CP.getValor();
+   public int getCP() {
+        return CP;
     }
 
-    public void setCP(Registrador cP) {
+    public void setCP(int cP) {
         CP = cP;
     }
-
     public void aumentaCP() {
-        CP.setValor(CP.getValor() + 1);
+        CP++;
     }
-
     public int getX() {
-        return X.getValor();
+        return X;
     }
 
-    public void setX(Registrador x) {
-        X = x;
+    public void setX(int x) {
+        X=x;
     }
 
     public int getY() {
-        return Y.getValor();
+        return Y;
     }
 
-    public void setY(Registrador y) {
-        Y = y;
+    public void setY(int y) {
+        Y=y;
     }
 
     public EstadoProcesso getEstadoProcesso() {
