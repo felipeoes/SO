@@ -9,7 +9,7 @@ public class BCP {
     private int espera;
 
     public BCP() {
-        this.CP = new Registrador();
+        this.CP = 0;
         this.espera = 0;
     }
 
