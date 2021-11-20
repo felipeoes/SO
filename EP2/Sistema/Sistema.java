@@ -7,9 +7,12 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Sistema {
-    private final int TAM_MAX_ARRANJO = 100;
+    private final static int TAM_MAX_ARRANJO = 100;
+    private final static int TAM_REPETICAO_PROP = 50;
+    private static int opcaoLeituraEscrita = 0;
     static List<String> RC;
     static Thread[] threads;
+    static float mediaTempo;
 
     public Sistema() {
         RC = new ArrayList<String>();
@@ -34,14 +37,13 @@ public class Sistema {
 
     private int buscaPosicao(ThreadLocalRandom generator) {
         int pos = generator.nextInt(100);
-
         while (threads[pos] != null) { // verifica se a posição no arranjo de threads já está ocupada
             pos = generator.nextInt(100);
         }
         return pos;
     }
 
-    private void populaObjetoThreads(int qntdLeitores, int qntdEscritores) {
+    private void populaObjetoThreads(int qntdLeitores, int qntdEscritores, int opcaoLeituraEscrita) {
         int totalObjetos = qntdLeitores + qntdEscritores;
         if (totalObjetos != 100) {
             System.out.println("Quantidade de objetos inválida, o total de objetos deve ser igual a 100");
@@ -51,47 +53,48 @@ public class Sistema {
 
         for (int i = 0; i < qntdLeitores; i++) {
             int pos = buscaPosicao(generator);
-
-            threads[pos] = new Leitor(RC);
+            threads[pos] = new Leitor(RC, opcaoLeituraEscrita);
         }
 
         for (int i = qntdLeitores; i < totalObjetos; i++) {
             int pos = buscaPosicao(generator);
-
-            threads[pos] = new Escritor(RC);
+            threads[pos] = new Escritor(RC, opcaoLeituraEscrita);
         }
     }
 
     private void executaThreads() {
-        int leitores = 0;
-        int escritores = 0;
         for (int i = 0; i < threads.length; i++) {
             if (threads[i] != null) {
-                if (threads[i].getClass().getSimpleName().equals("Leitor")) { // IF else utilizado para fins de debug e
-                                                                              // entendimento, podem remover dps
-                    leitores++;
-                } else {
-                    escritores++;
-                }
                 threads[i].start();
 
             } else {
                 System.out.println("Thread não existe");
             }
         }
-
-        System.out.println("Leitores: " + leitores);
-        System.out.println("Escritores: " + escritores);
-        System.out.println("Total: " + (leitores + escritores));
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         Sistema sis = new Sistema();
-
-        sis.carregaEstruturaRAM();
+        long horaInicioPrograma = System.currentTimeMillis();
+        for (int contador = 0; contador < 2; contador++) 
+        {
+			for (int i = 0; i <= TAM_MAX_ARRANJO; i++) 
+            {
+				for (int j = 0; j < TAM_REPETICAO_PROP; j++) 
+                {
+					sis.populaObjetoThreads(97, 3, contador + 1);
+					long horaInicioThread = System.currentTimeMillis();
+                    sis.carregaEstruturaRAM();
+					sis.executaThreads();
+					long horaFim = System.currentTimeMillis();
+					mediaTempo += horaFim - horaInicioThread;
+				}
+				mediaTempo /= TAM_REPETICAO_PROP;
+				System.out.println(mediaTempo);
+			}
+			long fimPrograma = System.currentTimeMillis();
+			System.out.println("Tempo de execução: " + ((fimPrograma - horaInicioPrograma) / 60000) + " minutos");
+		}     
         System.out.println(RC.size());
-
-        sis.populaObjetoThreads(97, 3);
-        sis.executaThreads();
     }
 }
