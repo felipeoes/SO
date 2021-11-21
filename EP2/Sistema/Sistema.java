@@ -9,7 +9,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Sistema {
     private final static int TAM_MAX_ARRANJO = 100;
     private final static int TAM_REPETICAO_PROP = 50;
-    private static int opcaoLeituraEscrita = 0;
     static List<String> RC;
     static Thread[] threads;
     static float mediaTempo;
@@ -51,12 +50,14 @@ public class Sistema {
 
         ThreadLocalRandom generator = ThreadLocalRandom.current();
 
-        for (int i = 0; i < qntdLeitores; i++) {
+        for (int i = 0; i < qntdLeitores; i++) 
+        {
             int pos = buscaPosicao(generator);
             threads[pos] = new Leitor(RC, opcaoLeituraEscrita);
         }
 
-        for (int i = qntdLeitores; i < totalObjetos; i++) {
+        for (int i = qntdLeitores; i < totalObjetos; i++) 
+        {
             int pos = buscaPosicao(generator);
             threads[pos] = new Escritor(RC, opcaoLeituraEscrita);
         }
@@ -64,10 +65,12 @@ public class Sistema {
 
     private void executaThreads() {
         for (int i = 0; i < threads.length; i++) {
-            if (threads[i] != null) {
+            if (threads[i] != null) 
+            {
                 threads[i].start();
-
-            } else {
+            } 
+            else 
+            {
                 System.out.println("Thread não existe");
             }
         }
@@ -75,6 +78,7 @@ public class Sistema {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         Sistema sis = new Sistema();
+        sis.carregaEstruturaRAM();
         long horaInicioPrograma = System.currentTimeMillis();
         for (int contador = 0; contador < 2; contador++) 
         {
@@ -83,8 +87,7 @@ public class Sistema {
 				for (int j = 0; j < TAM_REPETICAO_PROP; j++) 
                 {
 					sis.populaObjetoThreads(97, 3, contador + 1);
-					long horaInicioThread = System.currentTimeMillis();
-                    sis.carregaEstruturaRAM();
+					long horaInicioThread = System.currentTimeMillis();              
 					sis.executaThreads();
 					long horaFim = System.currentTimeMillis();
 					mediaTempo += horaFim - horaInicioThread;

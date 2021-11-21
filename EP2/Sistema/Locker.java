@@ -1,6 +1,6 @@
 public class Locker {
 
-	boolean block = false; // 1 = está bloqueado, 2 - não está bloqueado
+	boolean block = false; // 1 = block, 2 - sem block
 	Thread processoBloqueando = null;
 	int quantidadeBloqueados = 0;
 
