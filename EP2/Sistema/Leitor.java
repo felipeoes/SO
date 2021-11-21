@@ -69,7 +69,6 @@ public class Leitor extends Thread {
             int pos = generator.nextInt(100);
 
             palavraLida = RC.get(pos);
-            System.out.println("PALAVRA LEITOR: " + palavraLida); // debug
         }
         Leitor.sleep(1); 
     }

@@ -9,6 +9,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Sistema {
     private final static int TAM_MAX_ARRANJO = 100;
     private final static int TAM_REPETICAO_PROP = 50;
+    private static int numeroLeitores = 100;
+    private static int numeroEscritores = 0;
     static List<String> RC;
     static Thread[] threads;
     static float mediaTempo;
@@ -77,24 +79,36 @@ public class Sistema {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        Sistema sis = new Sistema();
-        sis.carregaEstruturaRAM();
         long horaInicioPrograma = System.currentTimeMillis();
         for (int contador = 0; contador < 2; contador++) 
         {
 			for (int i = 0; i <= TAM_MAX_ARRANJO; i++) 
             {
-				for (int j = 0; j < TAM_REPETICAO_PROP; j++) 
+				for (int j = 0; j <= TAM_REPETICAO_PROP; j++) 
                 {
-					sis.populaObjetoThreads(97, 3, contador + 1);
+                    if(numeroEscritores < 0 || numeroEscritores > 100) 
+                    {
+                        numeroEscritores = 0;
+                    }
+                    if(numeroLeitores < 0 || numeroLeitores > 100)
+                    {
+                        numeroLeitores = 100;
+                    }
+                    Sistema sis = new Sistema();
+                    sis.carregaEstruturaRAM();
+					sis.populaObjetoThreads(numeroLeitores, numeroEscritores, contador + 1);
 					long horaInicioThread = System.currentTimeMillis();              
 					sis.executaThreads();
 					long horaFim = System.currentTimeMillis();
 					mediaTempo += horaFim - horaInicioThread;
+                    numeroEscritores++;
+                    numeroLeitores--;
+                    
 				}
 				mediaTempo /= TAM_REPETICAO_PROP;
 				System.out.println(mediaTempo);
-			}
+
+            }
 			long fimPrograma = System.currentTimeMillis();
 			System.out.println("Tempo de execução: " + ((fimPrograma - horaInicioPrograma) / 60000) + " minutos");
 		}     
