@@ -48,6 +48,7 @@ public class Sistema {
         int totalObjetos = qntdLeitores + qntdEscritores;
         if (totalObjetos != 100) {
             System.out.println("Quantidade de objetos inválida, o total de objetos deve ser igual a 100");
+            return;
         }
 
         ThreadLocalRandom generator = ThreadLocalRandom.current();
